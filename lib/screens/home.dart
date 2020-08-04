@@ -28,7 +28,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   bool isFlagOn = false;
   bool headerShouldHide = false;
-  List<NotesModel> notesList = [];
+  List<NotesModel> notes = [];
   TextEditingController searchController = TextEditingController();
 
   bool isSearchEmpty = true;
@@ -44,7 +44,7 @@ class _MyHomePageState extends State<MyHomePage> {
     print("Entered setNotes");
     var fetchedNotes = await NotesDatabaseService.db.getNotesFromDB();
     setState(() {
-      notesList = fetchedNotes;
+      notes = fetchedNotes;
     });
   }
 
@@ -197,9 +197,9 @@ class _MyHomePageState extends State<MyHomePage> {
           duration: Duration(milliseconds: 200),
           curve: Curves.easeIn,
           margin: EdgeInsets.only(top: 8, bottom: 32, left: 10),
-          width: headerShouldHide ? 0 : 200,
+          width: headerShouldHide ? 0 : 250,
           child: Text(
-            'Your Notes',
+            'Rhyme Notes',
             style: TextStyle(
                 fontFamily: 'ZillaSlab',
                 fontWeight: FontWeight.w700,
@@ -240,11 +240,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
   List<Widget> buildNoteComponentsList() {
     List<Widget> noteComponentsList = [];
-    notesList.sort((a, b) {
+    notes.sort((a, b) {
       return b.date.compareTo(a.date);
     });
     if (searchController.text.isNotEmpty) {
-      notesList.forEach((note) {
+      notes.forEach((note) {
         if (note.title
                 .toLowerCase()
                 .contains(searchController.text.toLowerCase()) ||
@@ -259,7 +259,7 @@ class _MyHomePageState extends State<MyHomePage> {
       return noteComponentsList;
     }
     if (isFlagOn) {
-      notesList.forEach((note) {
+      notes.forEach((note) {
         if (note.isImportant)
           noteComponentsList.add(NoteCardComponent(
             noteData: note,
@@ -267,7 +267,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ));
       });
     } else {
-      notesList.forEach((note) {
+      notes.forEach((note) {
         noteComponentsList.add(NoteCardComponent(
           noteData: note,
           onTapAction: openNoteToRead,
